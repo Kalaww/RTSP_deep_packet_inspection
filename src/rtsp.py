@@ -49,6 +49,7 @@ class RTSP_Request:
         self.method = None
         self.URI = None
         self.version = None
+        self.header = {}
         self.decode()
 
     def decode(self):
@@ -59,11 +60,22 @@ class RTSP_Request:
         self.URI = first_line[1]
         self.version = first_line[2]
 
+        for line in lines[1:]:
+            splitted = line.split(": ")
+            if len(splitted) is not 2:
+                continue
+            self.header[splitted[0]] = splitted[1]
+
     def __str__(self):
-        str = "REQUEST\n"
+        str = "RTSP REQUEST\n"
         str += "method: " + self.method + "\n"
         str += "URI: " + self.URI + "\n"
-        str += "version: " + self.version
+        str += "version: " + self.version + "\n"
+
+        if len(self.header) > 0:
+            str += "header:\n"
+            for k,v in self.header.items():
+                str += "\t" + k + ": " + v + "\n"
         return str
 
 class RTSP_Response:
@@ -84,10 +96,10 @@ class RTSP_Response:
         self.reason_phrase = first_line[2]
 
     def __str__(self):
-        str = "RESPONSE\n"
+        str = "RTSP RESPONSE\n"
         str += "version: " + self.version + "\n"
         str += "status code: " + self.status_code + "\n"
-        str += "reason phrase: " + self.reason_phrase
+        str += "reason phrase: " + self.reason_phrase + "\n"
         return str
 
 class RTSP_Undefined:
@@ -96,4 +108,4 @@ class RTSP_Undefined:
         self.raw = raw
 
     def __str__(self):
-        return "UNDEFINED"
+        return "UNDEFINED" + "\n"
