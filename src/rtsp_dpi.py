@@ -12,7 +12,7 @@ def read_file(filename):
         packets.append(dpkt.ethernet.Ethernet(buf))
 
     rtsp_packets = rtsp.get_RTSP_packets(packets)
-    print len(rtsp_packets)
+
     for packet in rtsp_packets:
         print packet, "\n"
 
