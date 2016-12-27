@@ -2,6 +2,7 @@ import sys
 import dpkt
 
 import rtsp
+from rtsp import RTSP_Packets_Hanlder
 
 def read_file(filename):
     fd = open(filename)
@@ -11,9 +12,9 @@ def read_file(filename):
     for ts, buf in pcap:
         packets.append(dpkt.ethernet.Ethernet(buf))
 
-    rtsp_packets = rtsp.get_RTSP_packets(packets)
+    rtsp_packets_handler = RTSP_Packets_Hanlder(packets)
 
-    for packet in rtsp_packets:
+    for packet in rtsp_packets_handler.packets:
         print packet, "\n"
 
 
