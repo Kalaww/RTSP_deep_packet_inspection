@@ -186,7 +186,7 @@ class RTSP_Request(RTSP):
         self.version = first_line[2]
 
     def __str__(self):
-        s = "=============== RTSP REQUEST =============== (nb packet: " + str(self.nb_packets) +")\n"
+        s = "=============== RTSP REQUEST =============== (nb packets: " + str(self.nb_packets) +")\n"
         s += "method: " + self.method + "\n"
         s += "URI: " + self.URI + "\n"
         s += "version: " + self.version + "\n\n"
@@ -206,7 +206,7 @@ class RTSP_Response(RTSP):
         self.reason_phrase = first_line[2]
 
     def __str__(self):
-        s = "=============== RTSP RESPONSE =============== (nb packet: " + str(self.nb_packets) +")\n"
+        s = "=============== RTSP RESPONSE =============== (nb packets: " + str(self.nb_packets) +")\n"
         s += "version: " + self.version + "\n"
         s += "status code: " + self.status_code + "\n"
         s += "reason phrase: " + self.reason_phrase + "\n\n"
