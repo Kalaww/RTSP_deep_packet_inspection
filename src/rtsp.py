@@ -99,7 +99,6 @@ class RTSP:
                 if len(self.content) < int(self.entity_header["Content-Length"]):
                     return False
                 else:
-                    self.decode_content()
                     return True
             if len(splitted) is not 2:
                 continue
@@ -123,67 +122,45 @@ class RTSP:
         self.nb_packets += 1
         if len(self.content) < int(self.entity_header["Content-Length"]):
             return False
-        self.decode_content()
         return True
-
-    def decode_content(self):
-        if len(self.content) == 0:
-            return
-
-        t = {}
-        lines = self.content.split(CRLF)
-
-        while len(lines) > 0:
-            line = lines.pop(0)
-            splitted = line.split('=', 1)
-            if len(splitted) is not 2:
-                continue
-            if not splitted[0] in t:
-                t[splitted[0]] = []
-            t[splitted[0]].append(splitted[1])
-        self.content = t
 
     def str_general_header(self):
         if len(self.general_header) == 0:
             return ''
-        s = "GENERAL HEADER:\n"
+        s = "[ GENERAL HEADER ]\n"
         for k, v in self.general_header.items():
-            s += "\t" + k + ": " + v + "\n"
-        return s
+            s += k + ": " + v + "\n"
+        return s + "\n"
 
     def str_type_header(self):
         if len(self.type_header) == 0:
             return ''
-        s = "REQUEST HEADER:\n" if self.type == TYPE_REQUEST else "RESPONSE HEADER:\n"
+        s = "[ REQUEST HEADER ]\n" if self.type == TYPE_REQUEST else "[ RESPONSE HEADER ]\n"
         for k, v in self.type_header.items():
-            s += "\t" + k + ": " + v + "\n"
-        return s
+            s += k + ": " + v + "\n"
+        return s + "\n"
 
     def str_entity_header(self):
         if len(self.entity_header) == 0:
             return ''
-        s = "ENTITY HEADER:\n"
+        s = "[ ENTITY HEADER ]\n"
         for k, v in self.entity_header.items():
-            s += "\t" + k + ": " + v + "\n"
-        return s
+            s += k + ": " + v + "\n"
+        return s + "\n"
 
     def str_others_header(self):
         if len(self.others_header) == 0:
             return ''
-        s = "OTHERS HEADER:\n"
+        s = "[ OTHERS HEADER ]\n"
         for k, v in self.others_header.items():
-            s += "\t" + k + ": " + v + "\n"
-        return s
+            s += k + ": " + v + "\n"
+        return s + "\n"
 
     def str_content(self):
         if len(self.content) == 0:
             return ''
-        s = "CONTENT:\n"
-        for k, v in self.content.items():
-            s += "\t" + k + ":\t" + v[0] + "\n"
-            for l in v[1:]:
-                s += "\t\t" + l + "\n"
-        return s
+        s = "[ CONTENT ]\n" + self.content
+        return s + "\n"
 
     def __str__(self):
         s = ''
@@ -209,10 +186,10 @@ class RTSP_Request(RTSP):
         self.version = first_line[2]
 
     def __str__(self):
-        s = "## RTSP REQUEST ## (nb packet: " + str(self.nb_packets) +")\n"
+        s = "=============== RTSP REQUEST =============== (nb packet: " + str(self.nb_packets) +")\n"
         s += "method: " + self.method + "\n"
         s += "URI: " + self.URI + "\n"
-        s += "version: " + self.version + "\n"
+        s += "version: " + self.version + "\n\n"
         return s + RTSP.__str__(self)
 
 class RTSP_Response(RTSP):
@@ -229,8 +206,8 @@ class RTSP_Response(RTSP):
         self.reason_phrase = first_line[2]
 
     def __str__(self):
-        s = "## RTSP RESPONSE ## (nb packet: " + str(self.nb_packets) +")\n"
+        s = "=============== RTSP RESPONSE =============== (nb packet: " + str(self.nb_packets) +")\n"
         s += "version: " + self.version + "\n"
         s += "status code: " + self.status_code + "\n"
-        s += "reason phrase: " + self.reason_phrase + "\n"
+        s += "reason phrase: " + self.reason_phrase + "\n\n"
         return  s + RTSP.__str__(self)
